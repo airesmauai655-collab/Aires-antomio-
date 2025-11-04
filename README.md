@@ -136,6 +136,129 @@
 </section>
 <!-- ======= /Fim das Formas de Pagamento ======= -->
 
+<!-- ======= Upload e Pré-visualização de Imagens ======= -->
+<section id="image-uploader" style="max-width:760px;margin:30px auto;padding:18px;background:#fff;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,0.06);text-align:center;">
+  <h2 style="color:#00796b;margin-top:0;">📷 Adicionar imagens</h2>
+  <p style="color:#333;margin-bottom:8px;">Arrasta e larga ou clica para seleccionar imagens. Pré-visualização imediata.</p>
+
+  <div id="drop-area" style="border:2px dashed #cfeee9;padding:18px;border-radius:10px;cursor:pointer;background:#f9fffd;">
+    <input id="fileElem" type="file" accept="image/*" multiple style="display:none">
+    <div style="font-size:0.95rem;color:#00695c;">
+      <strong>Clica ou arrasta imagens aqui</strong><br>
+      (jpg, png, gif — até 5 MB por imagem)
+    </div>
+  </div>
+
+  <div id="gallery" style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:18px;"></div>
+
+  <div style="margin-top:14px;">
+    <button id="clear-images" style="background:#ff7043;color:#fff;border:none;padding:8px 12px;border-radius:8px;cursor:pointer">Remover todas</button>
+  </div>
+</section>
+
+<script>
+(function(){
+  const MAX_SIZE_MB = 5;
+  const drop = document.getElementById("drop-area");
+  const fileElem = document.getElementById("fileElem");
+  const gallery = document.getElementById("gallery");
+  const clearBtn = document.getElementById("clear-images");
+  const STORAGE_KEY = "jnjh_uploaded_images_v1";
+
+  // carregar do localStorage
+  let images = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+  renderGallery();
+
+  // eventos
+  drop.addEventListener("click", ()=> fileElem.click());
+  fileElem.addEventListener("change", (e)=> handleFiles(e.target.files));
+  ;["dragenter","dragover"].forEach(evt => drop.addEventListener(evt, (e)=> { e.preventDefault(); drop.style.background="#eafff6"; }));
+  ;["dragleave","drop"].forEach(evt => drop.addEventListener(evt, (e)=> { e.preventDefault(); drop.style.background="#f9fffd"; }));
+  drop.addEventListener("drop", (e)=> {
+    const dt = e.dataTransfer;
+    if(dt && dt.files) handleFiles(dt.files);
+  });
+
+  clearBtn.addEventListener("click", ()=>{
+    if(!confirm("Remover todas as imagens da galeria?")) return;
+    images = [];
+    saveAndRender();
+  });
+
+  function handleFiles(files){
+    const list = Array.from(files);
+    list.forEach(file => {
+      if(!file.type.startsWith("image/")) return alert("Apenas imagens são permitidas.");
+      if(file.size > MAX_SIZE_MB * 1024 * 1024) return alert(`Imagem muito grande. Máx: ${MAX_SIZE_MB} MB.`);
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        images.push({dataUrl: ev.target.result, name: file.name, size: file.size});
+        saveAndRender();
+      };
+      reader.readAsDataURL(file);
+    });
+    fileElem.value = ""; // limpa input
+  }
+
+  function renderGallery(){
+    gallery.innerHTML = "";
+    if(images.length === 0){
+      gallery.innerHTML = `<div style="color:#666;padding:18px">Nenhuma imagem adicionada.</div>`;
+      return;
+    }
+    images.forEach((img, idx) => {
+      const div = document.createElement("div");
+      div.style = "width:150px;border-radius:10px;overflow:hidden;background:#fff;border:1px solid #eee;box-shadow:0 4px 10px rgba(0,0,0,0.04);";
+      div.innerHTML = `
+        <div style="height:110px;display:flex;align-items:center;justify-content:center;background:#fafafa">
+          <img src="${img.dataUrl}" alt="${escapeHtml(img.name)}" style="max-width:100%;max-height:100%;object-fit:cover;display:block">
+        </div>
+        <div style="padding:8px;font-size:0.85rem;color:#333;text-align:left;">
+          <div style="font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(img.name)}</div>
+          <div style="font-size:0.8rem;color:#666;margin-top:6px;display:flex;gap:6px;justify-content:space-between;align-items:center">
+            <span>${(img.size/1024|0)} KB</span>
+            <div>
+              <button data-idx="${idx}" class="use-btn" style="background:#00796b;color:#fff;border:none;padding:4px 8px;border-radius:6px;cursor:pointer;font-size:0.78rem">Usar</button>
+              <button data-idx="${idx}" class="del-btn" style="background:#e0e0e0;color:#333;border:none;padding:4px 8px;border-radius:6px;cursor:pointer;font-size:0.78rem;margin-left:6px">Eliminar</button>
+            </div>
+          </div>
+        </div>
+      `;
+      gallery.appendChild(div);
+    });
+
+    // ligar eventos dos botões
+    gallery.querySelectorAll(".del-btn").forEach(b=>{
+      b.addEventListener("click", ()=> {
+        const i = Number(b.getAttribute("data-idx"));
+        images.splice(i,1);
+        saveAndRender();
+      });
+    });
+    gallery.querySelectorAll(".use-btn").forEach(b=>{
+      b.addEventListener("click", ()=>{
+        const i = Number(b.getAttribute("data-idx"));
+        // exemplo: abre a imagem numa nova aba ou podes inserir no site conforme precisares
+        const w = window.open();
+        w.document.write('<title>Imagem</title><img src="'+images[i].dataUrl+'" style="max-width:100%;height:auto;display:block;margin:20px auto">');
+      });
+    });
+  }
+
+  function saveAndRender(){
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(images));
+    } catch(e){
+      console.warn("Não foi possível salvar no localStorage:", e);
+    }
+    renderGallery();
+  }
+
+  // util
+  function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+})();
+</script>
+<!-- ======= /Fim Upload ======= -->
 
 </body>
 </html>
