@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JNJH Shop — Formas de Pagamento</title>
+  <style>
+    body { font-family: Arial, sans-serif; background:#f5f7f6; color:#333; margin:0; }
+    header { background:#00796b; color:#fff; padding:16px; text-align:center; }
+    section { text-align:center; margin:40px auto; max-width:600px; padding:20px; background:#fff; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.1); }
+    a.btn { display:block; text-decoration:none; color:#fff; padding:12px; border-radius:8px; margin:10px 0; font-weight:bold; }
+    .paypal { background:#0070ba; }
+    .mpesa { background:#4caf50; }
+    .emola { background:#ff9800; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>JNJH Shop</h1>
+    <p>Conhecimento que transforma — Pague de forma fácil e segura</p>
+  </header>
+
+  <section>
+    <h2>💳 Formas de Pagamento</h2>
+    <p>Escolhe a forma de pagamento mais conveniente para ti. Aceitamos PayPal, M-Pesa e E-Mola.</p>
+
+    <a href="#" class="btn paypal">💳 Pagar com PayPal (Demo)</a>
+    <a href="#" class="btn mpesa">📱 Pagar com M-Pesa (Demo)</a>
+    <a href="#" class="btn emola">💰 Pagar com E-Mola (Demo)</a>
+
+    <div style="margin-top:20px;">
+      <a href="https://wa.me/258869644130?text=Olá!%20Preciso%20de%20ajuda%20com%20o%20pagamento"
+         style="color:#00796b;text-decoration:underline;">💬 Falar com suporte no WhatsApp</a>
+    </div>
+  </section>
+</body>
+</html>
