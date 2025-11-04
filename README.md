@@ -99,7 +99,43 @@
 
   <footer>
     &copy; 2025 JNJH Shop — Todos os direitos reservados
-  </footer>
+  </footer><!-- ======= Formas de Pagamento ======= -->
+<section id="pagamentos" style="text-align:center;margin:50px 0;padding:20px;background:#f5f7f6;border-radius:12px;">
+  <h2 style="color:#00796b;">💳 Formas de Pagamento</h2>
+  <p style="font-size:1rem;color:#333;">Escolhe o método que preferes para pagar:</p>
+
+  <div style="display:flex;flex-direction:column;align-items:center;gap:20px;max-width:400px;margin:auto;">
+
+    <!-- PayPal -->
+    <a href="#" style="background:#0070ba;color:#fff;padding:12px 18px;border-radius:8px;text-decoration:none;width:100%;text-align:center;font-weight:bold;">
+      💳 Pagar com PayPal (Demo)
+    </a>
+
+    <!-- M-Pesa -->
+    <a href="#" style="background:#4caf50;color:#fff;padding:12px 18px;border-radius:8px;text-decoration:none;width:100%;text-align:center;font-weight:bold;">
+      📱 Pagar com M-Pesa (Demo)
+    </a>
+
+    <!-- E-Mola -->
+    <a href="#" style="background:#ff9800;color:#fff;padding:12px 18px;border-radius:8px;text-decoration:none;width:100%;text-align:center;font-weight:bold;">
+      💰 Pagar com E-Mola (Demo)
+    </a>
+  </div>
+
+  <!-- Espaço para Imagens (ex: logotipos ou QR codes) -->
+  <div style="margin-top:30px;">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal" style="height:50px;margin:10px;">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/Mpesa-logo.png" alt="M-Pesa" style="height:50px;margin:10px;">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/d/d3/EMola_logo.png" alt="E-Mola" style="height:50px;margin:10px;">
+  </div>
+
+  <div style="margin-top:25px;">
+    <a href="https://wa.me/258869644130?text=Olá!%20Preciso%20de%20ajuda%20com%20o%20pagamento"
+       style="color:#00796b;text-decoration:underline;font-weight:bold;">💬 Falar com suporte no WhatsApp</a>
+  </div>
+</section>
+<!-- ======= /Fim das Formas de Pagamento ======= -->
+
 
 </body>
 </html>
