@@ -262,3 +262,58 @@
 
 </body>
 </html>
+import React, {useEffect,useState} from 'react';
+import axios from 'axios';
+export default function Home(){
+  const [products,setProducts] = useState([]);
+  useEffect(()=>{ axios.get('/api/products').then(r=>setProducts(r.data)).catch(()=>{}); },[]);
+
+  const mpesaNumber = '858477539';
+  const molaNumber = '869644130';
+
+  return <div>
+    <section style={{display:'flex',gap:20,alignItems:'center',marginBottom:20}}>
+      <div style={{flex:1}}>
+        <h2>Bem-vindo à JNJH</h2>
+        <p>Plataforma de venda de produtos digitais — pagamento rápido por M-Pesa, Mola ou PayPal.</p>
+        <div style={{marginTop:12,padding:12,border:'1px solid #eee',borderRadius:8,background:'#fafafa'}}>
+          <h4>Formas de pagamento</h4>
+          <ul>
+            <li><strong>M-Pesa:</strong> Envia para <code>{mpesaNumber}</code> e contacta o suporte após pagamento.</li>
+            <li><strong>Mola:</strong> Envia para <code>{molaNumber}</code> e confirma o pagamento.</li>
+            <li><strong>PayPal:</strong> Paga pelo checkout online (Stripe/PayPal/MPesa integrados).</li>
+          </ul>
+          <small>Após receber a confirmação automática via webhook, o link de download será enviado ao e-mail do comprador.</small>
+        </div>
+      </div>
+      <div style={{width:180}}>
+        <img src='/logo.png' alt='logo' style={{width:'100%',borderRadius:8}}/>
+      </div>
+    </section>
+
+    <section>
+      <h3>Produtos</h3>
+      {products.length===0? <p>Nenhum produto (start backend)</p> : products.map(p=>(
+      <div key={p._id} style={{border:'1px solid #ddd',padding:12,marginBottom:8}}>
+        <h4>{p.title} — R$ {(p.priceCents/100).toFixed(2)}</h4>
+        <p>{p.description}</p>
+        <div style={{display:'flex',gap:8}}>
+          <button onClick={async ()=>{
+            const affiliateCode = prompt('Se és afiliado, coloca o teu código (ou cancela)');
+            try{
+              const res = await axios.post('/api/checkout/create-session', { productId: p._id, buyerEmail: 'cliente@exemplo.com', affiliateCode });
+              alert('Session criada (frontend demo). Vai pagar usando a Stripe/PayPal/Mobile Money configurada no backend.');
+            }catch(err){ alert('Erro: ' + (err.response?.data?.error || err.message)); }
+          }}>Comprar (Checkout)</button>
+
+          <button onClick={()=>{
+            alert('Para pagar por M-Pesa: envia para ' + mpesaNumber + '.\\nPara pagar por Mola: envia para ' + molaNumber + '.\\nDepois confirma o pagamento no suporte ou aguarda confirmação automática.');
+          }}>Pagar por M-Pesa / Mola</button>
+        </div>
+        <div style={{marginTop:6}}>
+          <small>Link de afiliado exemplo: <code>{window.location.origin + '/product/' + p._id + '?ref=SEUCOD'}</code></small>
+        </div>
+      </div>
+    ))}</section>
+  </div>;
+}
